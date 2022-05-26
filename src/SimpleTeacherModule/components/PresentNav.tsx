@@ -120,42 +120,42 @@ export default function PresentNav({ videoRef }: IPresentNavProps) {
   };
   const actionBtns = [
     {
-      src: require("@assets/stm/play2.png").default,
+      src: require("@assets/stm/play2.png"),
       eventName: "play",
       display: isMedia && !isPlaying,
     },
     {
-      src: require("@assets/stm/pause.png").default,
+      src: require("@assets/stm/pause.png"),
       eventName: "pause",
       display: isMedia && isPlaying,
     },
     {
-      src: require("@assets/stm/prev.png").default,
+      src: require("@assets/stm/prev.png"),
       eventName: "prev",
       display: true,
     },
     {
-      src: require("@assets/stm/next.png").default,
+      src: require("@assets/stm/next.png"),
       eventName: "next",
       display: true,
     },
     {
-      src: require("@assets/stm/fullscreen.png").default,
+      src: require("@assets/stm/fullscreen.png"),
       eventName: "fullscreen",
       display: !isFullscreen,
     },
     {
-      src: require("@assets/stm/normalscreen.png").default,
+      src: require("@assets/stm/normalscreen.png"),
       eventName: "exitFullscreen",
       display: isFullscreen,
     },
     {
-      src: require("@assets/stm/sound.png").default,
+      src: require("@assets/stm/sound.png"),
       eventName: "mute",
       display: isMedia && !isMute,
     },
     {
-      src: require("@assets/stm/mute.png").default,
+      src: require("@assets/stm/mute.png"),
       eventName: "unmute",
       display: isMedia && isMute,
     },
@@ -164,7 +164,7 @@ export default function PresentNav({ videoRef }: IPresentNavProps) {
     <Box className={css.root}>
       <Box className={clsx(css.iconBase, css.iconWrapper)}>
         <Icon
-          src={require("@assets/stm/back2.png").default}
+          src={require("@assets/stm/back2.png")}
           onClick={() => {
             history.push(pageLinks.lesson);
           }}
@@ -172,7 +172,7 @@ export default function PresentNav({ videoRef }: IPresentNavProps) {
       </Box>
       <Box className={clsx(css.iconBase, css.iconWrapper2)}>
         <Icon
-          src={require("@assets/stm/home.png").default}
+          src={require("@assets/stm/home.png")}
           onClick={() => {
             history.push(pageLinks.curriculum);
           }}

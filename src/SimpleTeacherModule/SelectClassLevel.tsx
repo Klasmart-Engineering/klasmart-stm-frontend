@@ -8,7 +8,7 @@ import vw from "./utils/vw.macro";
 
 const data: ILessonData[] = [
   {
-    img: require("@assets/stm/bada-rhyme.png").default,
+    img: require("@assets/stm/bada-rhyme.png"),
     level: "1",
     age: "Age 4-5",
     color: "#c572ff",
@@ -16,7 +16,7 @@ const data: ILessonData[] = [
     title: "Bada Rhyme",
   },
   {
-    img: require("@assets/stm/bada-genius.png").default,
+    img: require("@assets/stm/bada-genius.png"),
     level: "2",
     age: "Age 5-6",
     color: "#fbc319",
@@ -24,7 +24,7 @@ const data: ILessonData[] = [
     title: "Bada Genius",
   },
   {
-    img: require("@assets/stm/bada-talk.png").default,
+    img: require("@assets/stm/bada-talk.png"),
     level: "3",
     age: "Age 6-7",
     color: "#82d407",
@@ -32,7 +32,7 @@ const data: ILessonData[] = [
     title: "Bada Talk",
   },
   {
-    img: require("@assets/stm/bada-sound.png").default,
+    img: require("@assets/stm/bada-sound.png"),
     level: "4",
     age: "Age 7-8",
     color: "#0fbff5",
@@ -40,7 +40,7 @@ const data: ILessonData[] = [
     title: "Bada Sound",
   },
   {
-    img: require("@assets/stm/bada-read.png").default,
+    img: require("@assets/stm/bada-read.png"),
     level: "5",
     age: "Age 8-9",
     color: "#f957a8",
@@ -54,7 +54,7 @@ const useStyles = makeStyles({
     backgroundColor: "#42BDFF",
     width: "100vw",
     height: "100vh",
-    backgroundImage: `url('${require("@assets/stm/bg2.jpg").default}')`,
+    backgroundImage: `url('${require("@assets/stm/bg2.jpg")}')`,
     backgroundSize: "cover",
     backgroundPosition: "center",
   },
