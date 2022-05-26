@@ -20,13 +20,14 @@
     "@types/babel-plugin-macros": "^2.8.5",
     "babel-plugin-macros": "^3.0.0",
     "babel-plugin-transform-remove-console": "^6.9.4",
+    "cross-env": "^7.0.3",
     "customize-cra": "^1.0.0",
     "react-app-rewire-alias": "^1.1.5",
     "react-app-rewired": "^2.1.8"
   },
   "scripts": {
     "start": "react-app-rewired start",
-    "build": "react-app-rewired build"
+    "build": "cross-env NODE_ENV=production  BUILD_PATH=dist react-app-rewired build"
   },
   "eslintConfig": {
     "extends": [
