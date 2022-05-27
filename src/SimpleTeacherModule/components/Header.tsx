@@ -97,9 +97,7 @@ export default function Header(props: Props) {
       <BackButton
         aria-label="back"
         className={css.backBtn}
-        onClick={() => {
-          history.push(props.prevLink);
-        }}
+        onClick={history.goBack}
       >
         <img src={backArrow} alt="back" />
       </BackButton>

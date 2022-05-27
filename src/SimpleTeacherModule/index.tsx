@@ -14,6 +14,7 @@ const PresentActivity = React.lazy(() => import("./PresentActivity"));
 const SelectClassLevel = React.lazy(() => import("./SelectClassLevel"));
 const SelectCurriculum = React.lazy(() => import("./SelectCurriculum"));
 const SelectLesson = React.lazy(() => import("./SelectLesson"));
+const Error = React.lazy(() => import("./Error"));
 
 enum pageLinks {
   curriculum = "/stm/curriculum",
@@ -33,34 +34,36 @@ export default function Stm() {
       }}
     >
       <Suspense fallback={<CircularProgress />}>
-      <Router>
-        <Switch>
-          <Route path={pageLinks.curriculum}>
-            <SelectCurriculum />
-          </Route>
-          <Route path={pageLinks.lesson}>
-            <SelectLesson />
-          </Route>
-          <Route path={pageLinks.level}>
-            <SelectClassLevel />
-          </Route>
-          <Route path={pageLinks.present}>
-          <VideoContext.Provider
-            value={{
-              ...videoState,
-              setVideoState,
-            }}
-          >
-            <PresentActivity />
-          </VideoContext.Provider>
-          </Route>
-        </Switch>
-      </Router>
+        <Router>
+          <Switch>
+            <Route path={pageLinks.curriculum}>
+              <SelectCurriculum />
+            </Route>
+            <Route path={pageLinks.lesson}>
+              <SelectLesson />
+            </Route>
+            <Route path={pageLinks.level}>
+              <SelectClassLevel />
+            </Route>
+            <Route path={pageLinks.present}>
+              <VideoContext.Provider
+                value={{
+                  ...videoState,
+                  setVideoState,
+                }}
+              >
+                <PresentActivity />
+              </VideoContext.Provider>
+            </Route>
+            <Route path="/error">
+              <Error />
+            </Route>
+          </Switch>
+        </Router>
       </Suspense>
     </StmContext.Provider>
-  ) ;
+  );
 }
 
-Stm.routeMatchPath = "/stm/:step";
 
 export { pageLinks };
