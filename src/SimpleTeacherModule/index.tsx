@@ -17,10 +17,10 @@ const SelectLesson = React.lazy(() => import("./SelectLesson"));
 const Error = React.lazy(() => import("./Error"));
 
 enum pageLinks {
-  curriculum = "/stm/curriculum",
-  lesson = "/stm/lesson",
-  level = "/stm/level",
-  present = "/stm/present",
+  curriculum = "/",
+  lesson = "/lesson",
+  level = "/level",
+  present = "/present",
 }
 
 export default function Stm() {
@@ -36,7 +36,7 @@ export default function Stm() {
       <Suspense fallback={<CircularProgress />}>
         <Router>
           <Switch>
-            <Route path={pageLinks.curriculum}>
+            <Route exact path={pageLinks.curriculum}>
               <SelectCurriculum />
             </Route>
             <Route path={pageLinks.lesson}>
