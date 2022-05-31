@@ -1,11 +1,42 @@
-import eslImg from "@assets/stm/esl.png";
-import steamImg from "@assets/stm/steam.png";
+// import eslImg from "@assets/stm/esl.png";
+// import steamImg from "@assets/stm/steam.png";
 import { Box, Button, makeStyles, Typography, withStyles } from "@material-ui/core";
-import React, { useContext } from "react";
+import clsx from "clsx";
+import React from "react";
 import { useHistory } from "react-router-dom";
-import { StmContext } from "./contexts";
 import { pageLinks } from "./index";
 import vw from "./utils/vw.macro";
+
+const curriculumData: ICurriculumItem[] = [
+  {
+    id: "3e31068e-7fe1-46a7-bcc4-264622c72934",
+    no: 1,
+    name:"ESL",
+    thumbnail: "https://cms.alpha.kidsloop.net/static/media/esl.b5435761.png",
+    description: "Bada loves to play with Teddy Bear. His doll also helps him go to sleep."
+  },
+  {
+    id: "17385fb8-7c73-4ee1-918a-fadc3f31483a",
+    no: 2,
+    name: "STEAM",
+    thumbnail: "https://cms.alpha.kidsloop.net/static/media/steam.146d272c.png",
+    description: "Badanamu Steam"
+  },
+  {
+    id: "3e31068e-7fe1-46a7-bcc4-264622c76934",
+    no: 1,
+    name:"ESL",
+    thumbnail: "https://cms.alpha.kidsloop.net/static/media/esl.b5435761.png",
+    description: "Bada loves to play with Teddy Bear. His doll also helps him go to sleep."
+  },
+  {
+    id: "17385fb8-7c73-4ee1-918a-fadc3f31083a",
+    no: 2,
+    name: "STEAM",
+    thumbnail: "https://cms.alpha.kidsloop.net/static/media/steam.146d272c.png",
+    description: "Badanamu Steam"
+  }
+]
 
 const useStyles = makeStyles({
   root: {
@@ -36,6 +67,12 @@ const useStyles = makeStyles({
     height: vw(415),
     gap: vw(46),
   },
+  itemContainerWrap: {
+    flexWrap: "wrap",
+    alignContent: "flex-start",
+    width: vw(1342),
+    height: vw(900),
+  }
 });
 
 const IconButton = withStyles({
@@ -66,31 +103,31 @@ const IconButton = withStyles({
   },
 })(Button);
 
-function CurriculumItem(props: { name: IContextState["curriculum"] }) {
+function CurriculumItem(props: { item: ICurriculumItem }) {
   const history = useHistory();
-  const { setRootState, ...rootState } = useContext(StmContext);
   return (
     <IconButton
       onClick={() => {
-        history.push(pageLinks.level);
-        setRootState && setRootState({ ...rootState, curriculum: props.name });
+        history.push(pageLinks.level + `?curriculum=` + props.item.id );
       }}
     >
-      <img src={props.name === "steam" ? steamImg : eslImg} alt={props.name} />
+      <img src={props.item.thumbnail} alt={props.item.name} />
     </IconButton>
   );
 }
 
 export default function SelectCurriculum() {
   const css = useStyles();
+  const length = curriculumData.length;
   return (
     <Box className={css.root}>
       <Typography className={css.title} variant="h3">
         Select your curriculum
       </Typography>
-      <Box className={css.itemContainer}>
-        <CurriculumItem name="esl" />
-        <CurriculumItem name="steam" />
+      <Box className={clsx(css.itemContainer, length === 4 && css.itemContainerWrap)}>
+        {curriculumData.map(item => (
+          <CurriculumItem item={item} key={item.id} />
+        ))}
       </Box>
     </Box>
   );

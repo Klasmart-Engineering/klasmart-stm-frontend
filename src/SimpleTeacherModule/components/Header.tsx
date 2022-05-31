@@ -1,8 +1,8 @@
 import backArrow from "@assets/stm/arrow.svg";
 import { Box, IconButton, Link, makeStyles, withStyles } from "@material-ui/core";
-import React, { useContext } from "react";
+import React from "react";
 import { useHistory } from "react-router-dom";
-import { StmContext } from "../contexts";
+import useQuery from "../hooks/useQuery";
 import vw from "../utils/vw.macro";
 
 const BackButton = withStyles({
@@ -83,7 +83,7 @@ interface Props {
 export default function Header(props: Props) {
   const css = useStyles();
   let history = useHistory();
-  const rootState = useContext(StmContext);
+  const query = useQuery();
 
   return (
     <Link
@@ -103,8 +103,8 @@ export default function Header(props: Props) {
       </BackButton>
       {props.showTitle && (
         <Box className={css.title}>
-          <Box className={css.unitBtn}>Level&nbsp;{rootState.classLevel}</Box>
-          <Box className={css.skill}>{rootState.title}</Box>
+          <Box className={css.unitBtn}>Level&nbsp;{query.get('level')}</Box>
+          <Box className={css.skill}>{query.get('title')}</Box>
         </Box>
       )}
     </Link>

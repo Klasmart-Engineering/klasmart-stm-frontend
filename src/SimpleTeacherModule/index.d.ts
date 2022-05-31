@@ -25,12 +25,13 @@ interface IVideoState {
 }
 
 interface ILessonData {
-  img: string;
-  level: string;
-  age: string;
-  color: string;
-  top: React.CSSProperties["top"];
-  title: string;
+  id: string;
+  thumbnail: string;
+  level: number;
+  description: string;
+  // color: string;
+  // top: React.CSSProperties["top"];
+  name: string;
 }
 
 interface INavIcon {
@@ -104,4 +105,12 @@ interface IPresentNavProps {
 interface IVideoPlayerProps {
   source: string;
   poster?: string;
+}
+
+interface ICurriculumItem{
+  id: string;
+  no: number;
+  name: string;
+  thumbnail: string;
+  description: string;
 }

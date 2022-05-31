@@ -1,6 +1,6 @@
 import { Box, makeStyles, Typography } from "@material-ui/core";
-import React, { useContext, useEffect, useState } from "react";
-import { StmContext } from "./contexts";
+import React, { useEffect, useState } from "react";
+import useQuery from "./hooks/useQuery";
 import LessonUnit from "./LessonUnit";
 import TeachingUnit from "./TeachingUnit";
 import { getLessonPlan } from "./utils/api";
@@ -26,16 +26,18 @@ const useStyles = makeStyles({
 
 export default function LessonBox(prop: { unit: IUnitState }) {
   const css = useStyles();
+  const query = useQuery();
   const [state, setState] = useState<{ lessonPlans: ITeachingList[]; teachingList: LessonItem[] }>({
     lessonPlans: [],
     teachingList: [],
   });
   const [showTeach, setShowTeach] = useState<Boolean>(false);
-  const { curriculum, classLevel } = useContext(StmContext);
-
   useEffect(() => {
     let { unit } = prop;
-    let params: {} = { curriculum, classLevel };
+    let params: {} = {
+      curriculum: query.get("curriculum"),
+      classLevel: query.get("level")
+    };
     const getLesson = async () => {
       let data: ITeachingList[];
       try {
@@ -58,7 +60,7 @@ export default function LessonBox(prop: { unit: IUnitState }) {
       });
     };
     unit && getLesson();
-  }, [prop, curriculum, classLevel]);
+  }, [prop, query]);
   return (
     <Box className={css.lessonWrap}>
       {showTeach && (
