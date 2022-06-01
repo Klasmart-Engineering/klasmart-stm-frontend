@@ -166,7 +166,7 @@ export default function PresentNav({ videoRef }: IPresentNavProps) {
         <Icon
           src={require("@assets/stm/back2.png")}
           onClick={() => {
-            history.push(pageLinks.lesson);
+            history.goBack();
           }}
         />
       </Box>
