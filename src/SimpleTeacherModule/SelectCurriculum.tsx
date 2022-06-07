@@ -1,42 +1,10 @@
-// import eslImg from "@assets/stm/esl.png";
-// import steamImg from "@assets/stm/steam.png";
 import { Box, Button, makeStyles, Typography, withStyles } from "@material-ui/core";
 import clsx from "clsx";
 import React from "react";
 import { useHistory } from "react-router-dom";
 import { pageLinks } from "./index";
+import { getCurriculumData } from "./utils/api";
 import vw from "./utils/vw.macro";
-
-const curriculumData: ICurriculumItem[] = [
-  {
-    id: "3e31068e-7fe1-46a7-bcc4-264622c72934",
-    no: 1,
-    name:"ESL",
-    thumbnail: "https://cms.alpha.kidsloop.net/static/media/esl.b5435761.png",
-    description: "Bada loves to play with Teddy Bear. His doll also helps him go to sleep."
-  },
-  {
-    id: "17385fb8-7c73-4ee1-918a-fadc3f31483a",
-    no: 2,
-    name: "STEAM",
-    thumbnail: "https://cms.alpha.kidsloop.net/static/media/steam.146d272c.png",
-    description: "Badanamu Steam"
-  },
-  {
-    id: "3e31068e-7fe1-46a7-bcc4-264622c76934",
-    no: 1,
-    name:"ESL",
-    thumbnail: "https://cms.alpha.kidsloop.net/static/media/esl.b5435761.png",
-    description: "Bada loves to play with Teddy Bear. His doll also helps him go to sleep."
-  },
-  {
-    id: "17385fb8-7c73-4ee1-918a-fadc3f31083a",
-    no: 2,
-    name: "STEAM",
-    thumbnail: "https://cms.alpha.kidsloop.net/static/media/steam.146d272c.png",
-    description: "Badanamu Steam"
-  }
-]
 
 const useStyles = makeStyles({
   root: {
@@ -108,7 +76,7 @@ function CurriculumItem(props: { item: ICurriculumItem }) {
   return (
     <IconButton
       onClick={() => {
-        history.push(pageLinks.level + `?curriculum=` + props.item.id );
+        history.push(pageLinks.level + `?curriculum=` + props.item.id);
       }}
     >
       <img src={props.item.thumbnail} alt={props.item.name} />
@@ -118,13 +86,16 @@ function CurriculumItem(props: { item: ICurriculumItem }) {
 
 export default function SelectCurriculum() {
   const css = useStyles();
-  const length = curriculumData.length;
+  const [curriculumData, setCurriculumData] = React.useState<ICurriculumItem[]>([]);
+  React.useEffect(() => {
+    getCurriculumData().then(data => setCurriculumData(data));
+  }, [])
   return (
     <Box className={css.root}>
       <Typography className={css.title} variant="h3">
         Select your curriculum
       </Typography>
-      <Box className={clsx(css.itemContainer, length === 4 && css.itemContainerWrap)}>
+      <Box className={clsx(css.itemContainer, curriculumData.length === 4 && css.itemContainerWrap)}>
         {curriculumData.map(item => (
           <CurriculumItem item={item} key={item.id} />
         ))}

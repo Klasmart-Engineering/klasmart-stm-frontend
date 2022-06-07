@@ -10,6 +10,7 @@ import { pageLinks } from ".";
 import Header from "./components/Header";
 import useQuery from "./hooks/useQuery";
 import { objToQueryString } from "./utils";
+import { getCurriculumData } from "./utils/api";
 import vw from "./utils/vw.macro";
 
 const PAGESIZE = 5;
@@ -33,101 +34,6 @@ const styleDate = [
   {
     color: "#FF66AB",
     top: vw(22),
-  }
-]
-
-const data: ILessonData[] = [
-  {
-    "id": "0fe4a0b7-7fbd-419a-b0b3-852331cd7722",
-    "level": 1,
-    "name":"Bada Rhyme",
-    "thumbnail": "https://cms.alpha.kidsloop.net/static/media/bada-rhyme.07b94224.png",
-    "description": "Age 4-5"
-  },
-  {
-    "id": "369cff1c-82f7-4f7f-824e-367e9783ff93",
-    "level": 2,
-    "name": "Bada Genius",
-    "thumbnail": "https://cms.alpha.kidsloop.net/static/media/bada-genius.c01c6e23.png",
-    "description": "Age 5-6"
-  },
-  {
-    "id": "daa96eb0-fe7a-4554-bb28-6c08871f9a08",
-    "level": 3,
-    "name": "Bada Talk",
-    "thumbnail": "https://cms.alpha.kidsloop.net/static/media/bada-talk.0b432b3e.png",
-    "description": "Age 6-7"
-  },
-  {
-    "id": "fe98b7ce-365f-4123-a5ff-b89519dd933c",
-    "level": 4,
-    "name": "Bada Sound",
-    "thumbnail": "https://cms.alpha.kidsloop.net/static/media/bada-sound.427858f8.png",
-    "description": "Age 7-8"
-  },
-  {
-    "id": "6d8bed09-87ff-49a7-b0b5-24e80a64552a",
-    "level": 5,
-    "name": "Bada Read",
-    "thumbnail": "https://cms.alpha.kidsloop.net/static/media/bada-read.c5380a1f.png",
-    "description": "Age 8-9"
-  },
-
-  {
-    "id": "0fe4a0b7-7fbd-419a-b0b3-852331cd7722",
-    "level": 6,
-    "name":"Bada Rhyme",
-    "thumbnail": "https://cms.alpha.kidsloop.net/static/media/bada-rhyme.07b94224.png",
-    "description": "Age 4-5"
-  },
-  {
-    "id": "369cff1c-82f7-4f7f-824e-367e9783ff93",
-    "level": 7,
-    "name": "Bada Genius",
-    "thumbnail": "https://cms.alpha.kidsloop.net/static/media/bada-genius.c01c6e23.png",
-    "description": "Age 5-6"
-  },
-  {
-    "id": "daa96eb0-fe7a-4554-bb28-6c08871f9a08",
-    "level": 8,
-    "name": "Bada Talk",
-    "thumbnail": "https://cms.alpha.kidsloop.net/static/media/bada-talk.0b432b3e.png",
-    "description": "Age 6-7"
-  },
-  {
-    "id": "fe98b7ce-365f-4123-a5ff-b89519dd933c",
-    "level": 9,
-    "name": "Bada Sound",
-    "thumbnail": "https://cms.alpha.kidsloop.net/static/media/bada-sound.427858f8.png",
-    "description": "Age 7-8"
-  },
-  {
-    "id": "6d8bed09-87ff-49a7-b0b5-24e80a64552a",
-    "level": 10,
-    "name": "Bada Read",
-    "thumbnail": "https://cms.alpha.kidsloop.net/static/media/bada-read.c5380a1f.png",
-    "description": "Age 8-9"
-  },
-  {
-    "id": "0fe4a0b7-7fbd-419a-b0b3-852331cd7722",
-    "level": 11,
-    "name":"Bada Rhyme",
-    "thumbnail": "https://cms.alpha.kidsloop.net/static/media/bada-rhyme.07b94224.png",
-    "description": "Age 4-5"
-  },
-  {
-    "id": "369cff1c-82f7-4f7f-824e-367e9783ff93",
-    "level": 12,
-    "name": "Bada Genius",
-    "thumbnail": "https://cms.alpha.kidsloop.net/static/media/bada-genius.c01c6e23.png",
-    "description": "Age 5-6"
-  },
-  {
-    "id": "daa96eb0-fe7a-4554-bb28-6c08871f9a08",
-    "level": 13,
-    "name": "Bada Talk",
-    "thumbnail": "https://cms.alpha.kidsloop.net/static/media/bada-talk.0b432b3e.png",
-    "description": "Age 6-7"
   }
 ]
 
@@ -290,34 +196,33 @@ const IconButton = withStyles({
   },
 })(Button);
 
-function LessonItem(props: ILessonData & {index: number} ) {
+function LessonItem(props: ILessonData & {index: number, page: number} ) {
   const history = useHistory();
   const css = useStyles();
-  const query = useQuery();
+  const { index, page, id } = props
+
   return (
     <IconButton
       style={{
-        top: styleDate[props.index].top,
+        top: styleDate[index].top,
       }}
       onClick={() => {
         const params = {
-          level: props.level,
-          levelId: props.id,
-          curriculum: query.get('curriculum'),
-          title: props.name
+          level: (page - 1) * PAGESIZE + index + 1,
+          levelId: id,
         };
         history.push(pageLinks.lesson + `?${objToQueryString(params)}`);
       }}
     >
-      <Box className={css.itemLeve} style={{ background: styleDate[props.index].color }}>
+      <Box className={css.itemLeve} style={{ background: styleDate[index].color }}>
         <Typography className={css.itemLeveText1}>Level</Typography>
-        <Typography className={css.itemLeveText2}>{props.level}</Typography>
+        <Typography className={css.itemLeveText2}>{ (page - 1) * PAGESIZE + index + 1 }</Typography>
       </Box>
       <Box className={css.itemImg}>
-        <img src={props.thumbnail} alt={String(props.level)} />
+        <img src={props.thumbnail} alt={String((page - 1) * PAGESIZE + index + 1)} />
       </Box>
 
-      <Typography className={css.itemAge} style={{ color: styleDate[props.index].color }}>
+      <Typography className={css.itemAge} style={{ color: styleDate[index].color }}>
         {props.description}
       </Typography>
     </IconButton>
@@ -329,6 +234,20 @@ function LessonItem(props: ILessonData & {index: number} ) {
 export default function SelectClassLevel() {
   const css = useStyles();
   const [page, setPage] = useState(1);
+  const [data, setData] = useState([]);
+  const query = useQuery();
+  const history = useHistory();
+  const curriculumId = query.get("curriculum");
+
+  React.useEffect(() => {
+    if (!curriculumId) return history.push(`/error?msg=${encodeURIComponent('required curriculumId param')}`);
+    getCurriculumData().then(res => {
+      const curriculum = res.find((item: ICurrentData) => item.id === curriculumId) 
+      if(!curriculum) return history.push(`/error?msg=${encodeURIComponent('Invalid Params error')}`);
+      const levels = curriculum.levels
+      setData(levels)
+    }).catch(() => history.push(`/error?msg=${encodeURIComponent('Invalid Params error')}`))
+  }, [curriculumId, history])
 
   const handleChangePage = (page: number) => {
     setPage(page)
@@ -340,8 +259,8 @@ export default function SelectClassLevel() {
       <Box className={css.mainContainer}>
         <Box className={css.itemContainer}>
           {data.slice((page - 1) * PAGESIZE, (page - 1) * PAGESIZE + PAGESIZE)
-          .map((d, index) => {
-            return <LessonItem key={d.level} {...d} index={index}/>;
+          .map((d: ILessonData, index) => {
+            return <LessonItem key={d.id} {...d} index={index} page={page}/>;
           })}
         </Box>
         {page !== 1 && <ChevronLeftRounded 

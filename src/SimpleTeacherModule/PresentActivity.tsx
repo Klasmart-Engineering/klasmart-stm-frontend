@@ -6,6 +6,7 @@ import PresentNav from './components/PresentNav';
 import { usePresentState, useVideoState } from './hooks/rootState';
 import { geLessonMaterials } from './utils/api';
 import useQuery from './hooks/useQuery';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles({
 	root: {
@@ -18,20 +19,23 @@ const useStyles = makeStyles({
 export default function PresentActivity() {
 	const css = useStyles();
 	let query = useQuery();
+	let history = useHistory();
 	const videoRef = React.useRef<HTMLVideoElement>(null);
 	const { presentState, setPresentState } = usePresentState();
 	const { setVideoState } = useVideoState();
 	const { activeIndex = 0, isFullscreen = false } = presentState;
 	const [lessonMaterials, setLessonMaterials] = React.useState<IListItem[]>([]);
-	const lessonId = (query.get('lessonId') as unknown as number) || 1;
+	const lessonId = (query.get('lessonId') as unknown as number);
 	React.useEffect(() => {
 		const planId = query.get('planId');
-		const params: {} = {
-			curriculum: query.get('curriculum'),
-			classLevel: query.get('level'),
-		};
+		if (!planId) {
+			history.replace(`/error?msg=${encodeURIComponent('required planId param')}`);
+		}
+		if (!lessonId) {
+			history.replace(`/error?msg=${encodeURIComponent('required lessonId param')}`);
+		}
 		if (planId) {
-			geLessonMaterials(planId, params).then((data: IListItem[]) => {
+			geLessonMaterials(planId).then((data: IListItem[]) => {
 				setLessonMaterials(data);
 				setPresentState({
 					activeIndex: 0,

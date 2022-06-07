@@ -27,11 +27,19 @@ interface IVideoState {
 interface ILessonData {
   id: string;
   thumbnail: string;
-  level: number;
   description: string;
+  name: string;
+  // no: number;
   // color: string;
   // top: React.CSSProperties["top"];
+}
+
+interface ICurrentData {
+  id: string;
   name: string;
+  thumbnail: string;
+  description: string;
+  levels: ILessonData[];
 }
 
 interface INavIcon {
@@ -71,6 +79,7 @@ interface IPlayerProps {
 }
 
 interface IUnitState {
+  unitId: string;
   id: string;
   name: string;
   no: number;
@@ -108,9 +117,17 @@ interface IVideoPlayerProps {
 }
 
 interface ICurriculumItem{
+  id?: string;
+  name?: string;
+  thumbnail?: string;
+  description?: string;
+  levels?: ILessonData[];
+}
+
+interface ILessonPlan {
   id: string;
-  no: number;
   name: string;
-  thumbnail: string;
-  description: string;
+  thumbnail?: string;
+  description?:string,
+  units:Array<IUnitState>
 }
