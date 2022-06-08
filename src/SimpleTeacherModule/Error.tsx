@@ -1,26 +1,15 @@
 import { Box, Container, Typography } from "@material-ui/core";
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
-//import React from "react";
-import { useHistory, useLocation } from "react-router-dom";
-//import useQuery from "./hooks/useQuery";
-
-
+import { useLocation } from "react-router-dom";
 
 interface ErrorState{
     error: string;
 }
 
 export default function Error() {
-    let history = useHistory();
+
     const {state} = useLocation<ErrorState>();
-    // React.useEffect(() => {
-    //     let timer = setTimeout(()=>{
-    //         history.replace("/") 
-    //     },3000)
-    //     return ()=>{
-    //         clearTimeout(timer)
-    //     }
-    // },[])
+
     return (
         <Container maxWidth="sm">
             <Box sx={{ p: 5 }} >

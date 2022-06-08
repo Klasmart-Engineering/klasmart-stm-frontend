@@ -14,7 +14,6 @@ import LessonBox from './LessonBox';
 import vw from './utils/vw.macro';
 import { useQueryParams } from './hooks/useQuery';
 import { getLessonPlans } from './utils/api';
-import { useHistory } from 'react-router-dom';
 import usePageValidation from './hooks/usePageValidation';
 
 const useStyles = makeStyles({
