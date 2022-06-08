@@ -8,13 +8,14 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { pageLinks } from ".";
 import Header from "./components/Header";
-import useQuery from "./hooks/useQuery";
+import usePageValidation from "./hooks/usePageValidation";
+import {useQueryParams} from "./hooks/useQuery";
 import { objToQueryString } from "./utils";
 import { getCurriculumData } from "./utils/api";
 import vw from "./utils/vw.macro";
 
 const PAGESIZE = 5;
-const styleDate = [
+const styleData = [
   {
     color: "#c572ff",
     top: vw(22),
@@ -204,7 +205,7 @@ function LessonItem(props: ILessonData & {index: number, page: number} ) {
   return (
     <IconButton
       style={{
-        top: styleDate[index].top,
+        top: styleData[index].top,
       }}
       onClick={() => {
         const params = {
@@ -214,7 +215,7 @@ function LessonItem(props: ILessonData & {index: number, page: number} ) {
         history.push(pageLinks.lesson + `?${objToQueryString(params)}`);
       }}
     >
-      <Box className={css.itemLeve} style={{ background: styleDate[index].color }}>
+      <Box className={css.itemLeve} style={{ background: styleData[index].color }}>
         <Typography className={css.itemLeveText1}>Level</Typography>
         <Typography className={css.itemLeveText2}>{ (page - 1) * PAGESIZE + index + 1 }</Typography>
       </Box>
@@ -222,7 +223,7 @@ function LessonItem(props: ILessonData & {index: number, page: number} ) {
         <img src={props.thumbnail} alt={String((page - 1) * PAGESIZE + index + 1)} />
       </Box>
 
-      <Typography className={css.itemAge} style={{ color: styleDate[index].color }}>
+      <Typography className={css.itemAge} style={{ color: styleData[index].color }}>
         {props.description}
       </Typography>
     </IconButton>
@@ -235,23 +236,23 @@ export default function SelectClassLevel() {
   const css = useStyles();
   const [page, setPage] = useState(1);
   const [data, setData] = useState([]);
-  const query = useQuery();
-  const history = useHistory();
-  const curriculumId = query.get("curriculum");
+  const goErrorPage = usePageValidation();
+  const [curriculumId] = useQueryParams(["curriculum"]);
 
   React.useEffect(() => {
-    if (!curriculumId) return history.push(`/error?msg=${encodeURIComponent('required curriculumId param')}`);
+ 
+    if(!curriculumId) {
+      goErrorPage( 'curriculumId is required');
+      return;
+    }
+
     getCurriculumData().then(res => {
       const curriculum = res.find((item: ICurrentData) => item.id === curriculumId) 
-      if(!curriculum) return history.push(`/error?msg=${encodeURIComponent('Invalid Params error')}`);
       const levels = curriculum.levels
       setData(levels)
-    }).catch(() => history.push(`/error?msg=${encodeURIComponent('Invalid Params error')}`))
-  }, [curriculumId, history])
-
-  const handleChangePage = (page: number) => {
-    setPage(page)
-  }
+    }).catch(() => goErrorPage(('curriculumId is invalid'))); 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [curriculumId])
 
   return (
     <Box className={css.root}>
@@ -265,12 +266,12 @@ export default function SelectClassLevel() {
         </Box>
         {page !== 1 && <ChevronLeftRounded 
           className={clsx(css.buttonStyle, css.leftStyle)}
-          onClick={() => handleChangePage(page - 1)}
+          onClick={() => setPage(page - 1)}
         /> }
         {data.length !== 0 && page !== Math.ceil(data.length / PAGESIZE)
         && <ChevronRightRounded 
           className={clsx(css.buttonStyle, css.rightStyle)}
-          onClick={() => handleChangePage(page + 1)}
+          onClick={() => setPage(page + 1)}
         />}
       </Box>
     </Box>

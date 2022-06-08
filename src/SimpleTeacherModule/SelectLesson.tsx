@@ -12,9 +12,10 @@ import UnitsSelector from './components/UnitsSeletor';
 import { StmContext } from './contexts';
 import LessonBox from './LessonBox';
 import vw from './utils/vw.macro';
-import useQuery from './hooks/useQuery';
+import { useQueryParams } from './hooks/useQuery';
 import { getLessonPlans } from './utils/api';
 import { useHistory } from 'react-router-dom';
+import usePageValidation from './hooks/usePageValidation';
 
 const useStyles = makeStyles({
 	root: {
@@ -50,8 +51,6 @@ const useStyles = makeStyles({
 
 export default function SelectLesson() {
 	const css = useStyles();
-	const query = useQuery();
-	const history = useHistory();
 	const { setRootState, ...rootState } = useContext(StmContext);
 	const needScrollEvent = useRef(true);
 	const { currentUnit } = rootState;
@@ -67,11 +66,12 @@ export default function SelectLesson() {
 	};
 	const [headerTitle, setHeaderTitle] = useState('');
 	const [lessonPlans, setLessonPlans] = useState<IUnitState[]>([]);
-	let levelId = query.get('levelId');
-	let level = query.get('level');
+	const [levelId, level] = useQueryParams(["levelId", "level"]);
+	const goErrorPage = usePageValidation();
 	useEffect(() => {
 		if (!levelId || !level) {
-			history.push(`/error?msg='Invalid Params error'`);
+			goErrorPage("levelId or level are required");
+			return;
 		}
 		let data = {
 			id: '',
@@ -84,22 +84,24 @@ export default function SelectLesson() {
 			try {
 				data = levelId && (await getLessonPlans(levelId));
 				setHeaderTitle(data.name);
+				data.units.forEach((item: IUnitState, index: any) => {
+					item.no = index + 1;
+					item.unitId = index + 1 + '';
+					item.lesson_plans.forEach(
+						(lessonItem: LessonItem, lessonItemIndex: any) => {
+							lessonItem.no = lessonItemIndex + 1;
+						}
+					);
+				});
+				setLessonPlans(data.units);
 			} catch (error) {
-				history.push(`/error?msg='Invalid Params error'`);
+				goErrorPage();
 			}
-			data.units.forEach((item: IUnitState, index: any) => {
-				item.no = index + 1;
-				item.unitId = index + 1 + '';
-				item.lesson_plans.forEach(
-					(lessonItem: LessonItem, lessonItemIndex: any) => {
-						lessonItem.no = lessonItemIndex + 1;
-					}
-				);
-			});
-			setLessonPlans(data.units);
+
 		};
 		getLessons();
-	}, [history, level, levelId]);
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [level, levelId]);
 
 	const handleScroll = useCallback(() => {
 		if (!needScrollEvent.current) {

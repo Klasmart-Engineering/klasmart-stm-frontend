@@ -73,7 +73,7 @@ interface IPlayerProps {
     file_type: number;
     input_source: number;
   };
-  lessonNo?: number;
+  lessonNo?: number | string;
   thumbnail?: string;
   name?: string;
 }
