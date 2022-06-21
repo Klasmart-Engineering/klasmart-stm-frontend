@@ -15,6 +15,7 @@ import vw from './utils/vw.macro';
 import { useQueryParams } from './hooks/useQuery';
 import { getLessonPlans } from './utils/api';
 import usePageValidation from './hooks/usePageValidation';
+import { Helmet } from 'react-helmet';
 
 const useStyles = makeStyles({
 	root: {
@@ -156,25 +157,30 @@ export default function SelectLesson() {
 	}, [handleScroll]);
 
 	return (
-		<Box className={css.root}>
-			<Header
-				title={headerTitle}
-				showTitle
-				backgroudColor={'#43A1FF'}
-				prevLink='/stm/level'
-			/>
-			<Grid className={css.container}>
-				<Box className={css.unitSelector}>
-					<UnitsSelector
-						data={lessonPlans}
-						chosenUnit={currentUnit}
-						onChange={unitChange}
-					/>
-				</Box>
-				<Box id='lessonbox' className={css.lessonbox}>
-					<LessonBox data={lessonPlans}></LessonBox>
-				</Box>
-			</Grid>
-		</Box>
+		<>
+			<Helmet>
+				<title>Select lesson</title>
+			</Helmet>
+			<Box className={css.root}>
+				<Header
+					title={headerTitle}
+					showTitle
+					backgroudColor={'#43A1FF'}
+					prevLink='/stm/level'
+				/>
+				<Grid className={css.container}>
+					<Box className={css.unitSelector}>
+						<UnitsSelector
+							data={lessonPlans}
+							chosenUnit={currentUnit}
+							onChange={unitChange}
+						/>
+					</Box>
+					<Box id='lessonbox' className={css.lessonbox}>
+						<LessonBox data={lessonPlans}></LessonBox>
+					</Box>
+				</Grid>
+			</Box>
+		</>
 	);
 }

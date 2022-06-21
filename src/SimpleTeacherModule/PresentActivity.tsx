@@ -7,6 +7,7 @@ import { usePresentState, useVideoState } from './hooks/rootState';
 import { geLessonMaterials } from './utils/api';
 import { useQueryParams } from './hooks/useQuery';
 import usePageValidation from './hooks/usePageValidation';
+import { Helmet } from 'react-helmet';
 
 const useStyles = makeStyles({
 	root: {
@@ -26,7 +27,7 @@ export default function PresentActivity() {
 	const goErrorPage = usePageValidation();
 	const [lessonId, planId] = useQueryParams(["lessonId", "planId"]);
 	React.useEffect(() => {
-		if(!lessonId || !planId) {
+		if (!lessonId || !planId) {
 			goErrorPage("lessonId and planId are required");
 			return;
 		}
@@ -67,16 +68,22 @@ export default function PresentActivity() {
 	}, [data.file_type]);
 
 	return (
-		<Box className={css.root}>
-			<PresentNav videoRef={videoRef as React.RefObject<HTMLVideoElement>} />
-			{!isFullscreen && <PresentList list={lessonMaterials} />}
-			<PresentPlayer
-				ref={videoRef}
-				data={data}
-				name={name}
-				thumbnail={thumbnail}
-				lessonNo={lessonId}
-			/>
-		</Box>
+		<>
+			<Helmet>
+				<title>{name}</title>
+			</Helmet>
+
+			<Box className={css.root}>
+				<PresentNav videoRef={videoRef as React.RefObject<HTMLVideoElement>} />
+				{!isFullscreen && <PresentList list={lessonMaterials} />}
+				<PresentPlayer
+					ref={videoRef}
+					data={data}
+					name={name}
+					thumbnail={thumbnail}
+					lessonNo={lessonId}
+				/>
+			</Box>
+		</>
 	);
 }

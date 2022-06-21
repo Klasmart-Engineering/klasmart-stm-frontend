@@ -2,6 +2,7 @@ import { Box, Button, makeStyles, Typography, withStyles } from "@material-ui/co
 import clsx from "clsx";
 import React from "react";
 import { useHistory } from "react-router-dom";
+import { Helmet } from "react-helmet";
 import { pageLinks } from "./index";
 import { getCurriculumData } from "./utils/api";
 import vw from "./utils/vw.macro";
@@ -91,15 +92,20 @@ export default function SelectCurriculum() {
     getCurriculumData().then(data => setCurriculumData(data));
   }, [])
   return (
-    <Box className={css.root}>
-      <Typography className={css.title} variant="h3">
-        Select your curriculum
-      </Typography>
-      <Box className={clsx(css.itemContainer, curriculumData.length === 4 && css.itemContainerWrap)}>
-        {curriculumData.map(item => (
-          <CurriculumItem item={item} key={item.id} />
-        ))}
+    <>
+      <Helmet>
+        <title>Select your curriculum</title>
+      </Helmet>
+      <Box className={css.root}>
+        <Typography className={css.title} variant="h3">
+          Select your curriculum
+        </Typography>
+        <Box className={clsx(css.itemContainer, curriculumData.length === 4 && css.itemContainerWrap)}>
+          {curriculumData.map(item => (
+            <CurriculumItem item={item} key={item.id} />
+          ))}
+        </Box>
       </Box>
-    </Box>
+    </>
   );
 }

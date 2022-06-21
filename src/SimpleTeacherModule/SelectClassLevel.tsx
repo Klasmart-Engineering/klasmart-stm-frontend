@@ -5,11 +5,12 @@ import {
 } from "@material-ui/icons";
 import clsx from "clsx";
 import React, { useState } from "react";
+import { Helmet } from "react-helmet";
 import { useHistory } from "react-router-dom";
 import { pageLinks } from ".";
 import Header from "./components/Header";
 import usePageValidation from "./hooks/usePageValidation";
-import {useQueryParams} from "./hooks/useQuery";
+import { useQueryParams } from "./hooks/useQuery";
 import { objToQueryString } from "./utils";
 import { getCurriculumData } from "./utils/api";
 import vw from "./utils/vw.macro";
@@ -75,14 +76,14 @@ const useStyles = makeStyles({
     transform: "translateY(-50%)",
     width: vw(100),
     height: vw(100),
-    color: "rgba(0,0,0, .5)", 
+    color: "rgba(0,0,0, .5)",
     background: "#fff",
     borderRadius: "50%",
     opacity: 0.6,
   },
   leftStyle: {
     left: "3%",
-  }, 
+  },
   rightStyle: {
     right: "3%",
   },
@@ -197,7 +198,7 @@ const IconButton = withStyles({
   },
 })(Button);
 
-function LessonItem(props: ILessonData & {index: number, page: number} ) {
+function LessonItem(props: ILessonData & { index: number, page: number }) {
   const history = useHistory();
   const css = useStyles();
   const { index, page, id } = props
@@ -217,7 +218,7 @@ function LessonItem(props: ILessonData & {index: number, page: number} ) {
     >
       <Box className={css.itemLeve} style={{ background: styleData[index].color }}>
         <Typography className={css.itemLeveText1}>Level</Typography>
-        <Typography className={css.itemLeveText2}>{ (page - 1) * PAGESIZE + index + 1 }</Typography>
+        <Typography className={css.itemLeveText2}>{(page - 1) * PAGESIZE + index + 1}</Typography>
       </Box>
       <Box className={css.itemImg}>
         <img src={props.thumbnail} alt={String((page - 1) * PAGESIZE + index + 1)} />
@@ -240,40 +241,46 @@ export default function SelectClassLevel() {
   const [curriculumId] = useQueryParams(["curriculum"]);
 
   React.useEffect(() => {
- 
-    if(!curriculumId) {
-      goErrorPage( 'curriculumId is required');
+
+    if (!curriculumId) {
+      goErrorPage('curriculumId is required');
       return;
     }
 
     getCurriculumData().then(res => {
-      const curriculum = res.find((item: ICurrentData) => item.id === curriculumId) 
+      const curriculum = res.find((item: ICurrentData) => item.id === curriculumId)
       const levels = curriculum.levels
       setData(levels)
-    }).catch(() => goErrorPage(('curriculumId is invalid'))); 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    }).catch(() => goErrorPage(('curriculumId is invalid')));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [curriculumId])
 
   return (
-    <Box className={css.root}>
-      <Header prevLink="/stm/curriculum" />
-      <Box className={css.mainContainer}>
-        <Box className={css.itemContainer}>
-          {data.slice((page - 1) * PAGESIZE, (page - 1) * PAGESIZE + PAGESIZE)
-          .map((d: ILessonData, index) => {
-            return <LessonItem key={d.id} {...d} index={index} page={page}/>;
-          })}
+    <>
+      <Helmet>
+        <title>Select your level</title>
+      </Helmet>
+
+      <Box className={css.root}>
+        <Header prevLink="/stm/curriculum" />
+        <Box className={css.mainContainer}>
+          <Box className={css.itemContainer}>
+            {data.slice((page - 1) * PAGESIZE, (page - 1) * PAGESIZE + PAGESIZE)
+              .map((d: ILessonData, index) => {
+                return <LessonItem key={d.id} {...d} index={index} page={page} />;
+              })}
+          </Box>
+          {page !== 1 && <ChevronLeftRounded
+            className={clsx(css.buttonStyle, css.leftStyle)}
+            onClick={() => setPage(page - 1)}
+          />}
+          {data.length !== 0 && page !== Math.ceil(data.length / PAGESIZE)
+            && <ChevronRightRounded
+              className={clsx(css.buttonStyle, css.rightStyle)}
+              onClick={() => setPage(page + 1)}
+            />}
         </Box>
-        {page !== 1 && <ChevronLeftRounded 
-          className={clsx(css.buttonStyle, css.leftStyle)}
-          onClick={() => setPage(page - 1)}
-        /> }
-        {data.length !== 0 && page !== Math.ceil(data.length / PAGESIZE)
-        && <ChevronRightRounded 
-          className={clsx(css.buttonStyle, css.rightStyle)}
-          onClick={() => setPage(page + 1)}
-        />}
       </Box>
-    </Box>
+    </>
   );
 }
