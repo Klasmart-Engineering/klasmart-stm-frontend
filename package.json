@@ -28,7 +28,7 @@
     "react-app-rewired": "^2.1.8"
   },
   "scripts": {
-    "start": "react-app-rewired start",
+    "start": "react-app-rewired start --mode test",
     "build": "cross-env NODE_ENV=production  BUILD_PATH=dist react-app-rewired build"
   },
   "eslintConfig": {
