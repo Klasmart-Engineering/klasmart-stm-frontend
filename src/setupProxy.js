@@ -3,7 +3,7 @@ const { createProxyMiddleware } = require("http-proxy-middleware");
 const proxy = {
   '/data': {
     changeOrigin: true,
-    target: 'https://stm.alpha.kidsloop.net/data/',
+    target: process.env.REACT_APP_BASE_API,
     pathRewrite: {
       '^/data': "",
     },
